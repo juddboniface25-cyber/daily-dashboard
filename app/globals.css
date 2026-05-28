@@ -2,26 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Starbucks Design System */
+
+    /* Canvas: Neutral Warm #f2f0eb */
+    --background: 43 21% 94%;
+    --foreground: 0 0% 13%;
+
+    /* Cards: White #ffffff */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 13%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 13%;
+
+    /* Primary CTA: Green Accent #00754A */
+    --primary: 158 100% 23%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: Green Light #d4e9e2 */
+    --secondary: 160 33% 87%;
+    --secondary-foreground: 164 31% 17%;
+
+    /* Muted: Ceramic #edebe9 */
+    --muted: 30 10% 92%;
+    --muted-foreground: 0 0% 40%;
+
+    /* Accent: Green Light wash */
+    --accent: 160 33% 87%;
+    --accent-foreground: 158 100% 19%;
+
+    /* Destructive: Starbucks Red #c82014 */
+    --destructive: 3 84% 42%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders / Input: #d6dbde */
+    --border: 201 11% 86%;
+    --input: 201 11% 86%;
+    --ring: 158 100% 23%;
+
+    /* 12px card radius */
+    --radius: 0.75rem;
+
+    --chart-1: 158 100% 23%;
+    --chart-2: 160 100% 19%;
+    --chart-3: 164 31% 17%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 3 84% 42%;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    letter-spacing: -0.01em;
   }
 }

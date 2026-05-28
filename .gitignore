@@ -34,3 +34,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local SQLite database
+/data/
+
+# local dev artifacts
+localhost.txt
+graphify-out/
