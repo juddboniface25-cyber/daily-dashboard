@@ -13,10 +13,10 @@ import { useSupplements } from "@/hooks/useSupplements";
 const MEALS = ["breakfast", "lunch", "dinner", "snack"] as const;
 type Meal = (typeof MEALS)[number];
 
-const MORNING_SUPPLEMENTS = ["Creatine", "K2 + D3", "Fish Oil", "Multivitamin"] as const;
-const NIGHT_SUPPLEMENTS   = ["Magnesium", "L-Theanine", "Ashwagandha"] as const;
+export const MORNING_SUPPLEMENTS = ["Creatine", "K2 + D3", "Fish Oil", "Multivitamin"] as const;
+export const NIGHT_SUPPLEMENTS   = ["Magnesium", "L-Theanine", "Ashwagandha"] as const;
 
-function SupplementGroup({
+export function SupplementGroup({
   title,
   Icon,
   items,

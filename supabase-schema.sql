@@ -65,3 +65,12 @@ alter table learning    disable row level security;
 -- Add macro columns to food_log (safe to run on existing tables)
 alter table public.food_log add column if not exists protein_g integer default 0;
 alter table public.food_log add column if not exists carbs_g   integer default 0;
+
+-- Per-day workout type (Push/Pull/Legs/Upper/Lower/Rest)
+create table if not exists workout_days (
+  id           uuid default gen_random_uuid() primary key,
+  date         date not null unique,
+  workout_type text,
+  created_at   timestamptz default now()
+);
+alter table workout_days disable row level security;

@@ -8,10 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useSteps } from "@/hooks/useSteps";
 import { useWorkouts } from "@/hooks/useWorkouts";
+import { useWorkoutType, WORKOUT_TYPES } from "@/hooks/useWorkoutType";
 
 export default function FitnessSection({ date }: { date: string }) {
   const { data: stepData, loading: stepsLoading, error: stepsError, save: saveSteps } = useSteps(date);
   const { data: workouts, loading: workoutsLoading, error: workoutsError, add: addWorkout } = useWorkouts(date);
+  const { type: workoutType, setType: setWorkoutType } = useWorkoutType(date);
 
   const [steps, setSteps] = useState("");
   const [savingSteps, setSavingSteps] = useState(false);
@@ -97,6 +99,29 @@ export default function FitnessSection({ date }: { date: string }) {
           {workoutsError && (
             <p className="text-xs text-destructive bg-destructive/10 px-3 py-2 rounded-lg">{workoutsError}</p>
           )}
+
+          {/* Workout day type — tap to set, tap again to clear */}
+          <div className="space-y-1">
+            <Label>Workout Day</Label>
+            <div className="flex flex-wrap gap-1.5">
+              {WORKOUT_TYPES.map((t) => {
+                const active = workoutType === t;
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setWorkoutType(active ? null : t)}
+                    aria-pressed={active}
+                    className="rounded-full px-3 py-1 text-xs font-medium transition-colors hover:bg-muted"
+                    style={active ? { backgroundColor: "#EEF2FF", color: "#4F46E5" } : undefined}
+                  >
+                    {t}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="space-y-2">
             <div className="space-y-1">
               <Label htmlFor="exercise">Exercise</Label>

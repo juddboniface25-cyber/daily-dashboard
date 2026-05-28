@@ -1,16 +1,22 @@
 "use client";
 
-import { format } from "date-fns";
-import { Flame, Moon, Brain, Zap } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { BarChart, Bar, ResponsiveContainer } from "recharts";
+import { Flame, Moon, Brain, Zap, Sun } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { useSteps } from "@/hooks/useSteps";
 import { useWorkouts } from "@/hooks/useWorkouts";
 import { useFoodLog } from "@/hooks/useFoodLog";
 import { useSleep } from "@/hooks/useSleep";
 import { useLearning } from "@/hooks/useLearning";
 import { useSupplements } from "@/hooks/useSupplements";
-import { useHistory } from "@/hooks/useHistory";
+import {
+  SupplementGroup,
+  MORNING_SUPPLEMENTS,
+  NIGHT_SUPPLEMENTS,
+} from "@/components/sections/HealthSection";
+
+// Shared bento cell: white card with subtle border + 14px padding.
+const CELL =
+  "rounded-lg border-[0.5px] border-[color:var(--color-border-tertiary)] bg-[color:var(--color-background-primary)] p-[14px]";
 
 function FootIcon({
   filled,
@@ -223,49 +229,47 @@ function SleepCard({
   const goalMet = value >= goal;
 
   return (
-    <Card>
-      <CardContent className="p-4 space-y-2">
-        {/* Animated moon + twinkling stars */}
-        <div className="relative h-14 w-full flex items-center justify-center">
-          {SLEEP_STARS.map((s, i) => (
-            <span
-              key={i}
-              className="absolute text-amber-400 select-none pointer-events-none leading-none"
-              style={{
-                top: s.top,
-                left: s.left,
-                fontSize: s.size,
-                animation: "twinkle 2.4s ease-in-out infinite",
-                animationDelay: s.delay,
-              }}
-            >
-              ★
-            </span>
-          ))}
-          <Moon
-            className="h-7 w-7 text-indigo-600 relative z-10"
-            style={
-              goalMet
-                ? { animation: "moon-glow 2.5s ease-in-out infinite" }
-                : undefined
-            }
-          />
-        </div>
-        <div>
-          <p className="text-xl font-bold leading-none">
-            {hours !== null ? hours : "—"}
-          </p>
-          <p className="text-[11px] text-muted-foreground mt-1">hrs</p>
-        </div>
-        <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-          <div
-            className="h-1.5 rounded-full transition-all bg-indigo-500"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <p className="text-[10px] text-muted-foreground">Goal: {goal} hrs</p>
-      </CardContent>
-    </Card>
+    <div className="space-y-2">
+      {/* Animated moon + twinkling stars */}
+      <div className="relative h-14 w-full flex items-center justify-center">
+        {SLEEP_STARS.map((s, i) => (
+          <span
+            key={i}
+            className="absolute text-amber-400 select-none pointer-events-none leading-none"
+            style={{
+              top: s.top,
+              left: s.left,
+              fontSize: s.size,
+              animation: "twinkle 2.4s ease-in-out infinite",
+              animationDelay: s.delay,
+            }}
+          >
+            ★
+          </span>
+        ))}
+        <Moon
+          className="h-7 w-7 text-indigo-600 relative z-10"
+          style={
+            goalMet
+              ? { animation: "moon-glow 2.5s ease-in-out infinite" }
+              : undefined
+          }
+        />
+      </div>
+      <div>
+        <p className="text-xl font-bold leading-none">
+          {hours !== null ? hours : "—"}
+        </p>
+        <p className="text-[11px] text-muted-foreground mt-1">hrs</p>
+      </div>
+      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+        <div
+          className="h-1.5 rounded-full transition-all bg-indigo-500"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      <p className="text-[10px] text-muted-foreground">Goal: {goal} hrs</p>
+    </div>
   );
 }
 
@@ -279,44 +283,41 @@ function LearningCard({
   const progress = Math.min(goal > 0 ? (minutes / goal) * 100 : 0, 100);
 
   return (
-    <Card>
-      <CardContent className="p-4 space-y-2">
-        {/* Animated brain + radiating glow rings */}
-        <div className="relative h-14 w-full flex items-center justify-center">
-          <span
-            className="absolute h-10 w-10 rounded-full bg-green-500/40 pointer-events-none"
-            style={{ animation: "brain-pulse 2s ease-out infinite" }}
-          />
-          <span
-            className="absolute h-10 w-10 rounded-full bg-green-500/40 pointer-events-none"
-            style={{ animation: "brain-pulse 2s ease-out infinite", animationDelay: "1s" }}
-          />
-          <Brain className="h-7 w-7 text-green-600 relative z-10" />
-        </div>
-        <div>
-          <p className="text-xl font-bold leading-none">{minutes}</p>
-          <p className="text-[11px] text-muted-foreground mt-1">min</p>
-        </div>
-        <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-          <div
-            className="h-1.5 rounded-full transition-all bg-green-500"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <p className="text-[10px] text-muted-foreground">Goal: {goal} min</p>
-      </CardContent>
-    </Card>
+    <div className="space-y-2">
+      {/* Animated brain + radiating glow rings */}
+      <div className="relative h-14 w-full flex items-center justify-center">
+        <span
+          className="absolute h-10 w-10 rounded-full bg-green-500/40 pointer-events-none"
+          style={{ animation: "brain-pulse 2s ease-out infinite" }}
+        />
+        <span
+          className="absolute h-10 w-10 rounded-full bg-green-500/40 pointer-events-none"
+          style={{ animation: "brain-pulse 2s ease-out infinite", animationDelay: "1s" }}
+        />
+        <Brain className="h-7 w-7 text-green-600 relative z-10" />
+      </div>
+      <div>
+        <p className="text-xl font-bold leading-none">{minutes}</p>
+        <p className="text-[11px] text-muted-foreground mt-1">min</p>
+      </div>
+      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+        <div
+          className="h-1.5 rounded-full transition-all bg-green-500"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      <p className="text-[10px] text-muted-foreground">Goal: {goal} min</p>
+    </div>
   );
 }
 
 export default function OverviewSection({ date }: { date: string }) {
-  const { data: stepData }              = useSteps(date);
-  const { data: workoutsData }          = useWorkouts(date);
-  const { data: foodData }              = useFoodLog(date);
-  const { data: sleepData }             = useSleep(date);
-  const { data: learningData }          = useLearning(date);
-  const { checked: supplementsChecked } = useSupplements(date);
-  const { data: history }               = useHistory(7);
+  const { data: stepData }                              = useSteps(date);
+  const { data: workoutsData }                          = useWorkouts(date);
+  const { data: foodData }                              = useFoodLog(date);
+  const { data: sleepData }                             = useSleep(date);
+  const { data: learningData }                          = useLearning(date);
+  const { checked: supplementsChecked, toggle: toggleSupplement } = useSupplements(date);
 
   const steps            = stepData?.count ?? 0;
   const caloriesConsumed = foodData.reduce((sum, e) => sum + (e.calories ?? 0), 0);
@@ -324,122 +325,82 @@ export default function OverviewSection({ date }: { date: string }) {
   const totalCarbs       = foodData.reduce((sum, e) => sum + (e.carbs_g ?? 0), 0);
   const sleepHours       = sleepData?.total_hours ?? null;
   const learningMinutes  = learningData.reduce((sum, s) => sum + s.minutes, 0);
-  const workoutCount     = workoutsData.length;
-  const foodEntryCount   = foodData.length;
   const caloriesBurned   = workoutsData.reduce(
     (sum, w) => sum + (w.sets ?? 1) * (w.reps ?? 1) * (w.weight_lbs ?? 0) * 0.05,
     0
   );
-  const supplementsTaken = Object.values(supplementsChecked).filter(Boolean).length;
-  const activeMinutes    = Math.round(steps / 100 + learningMinutes);
-
-  const todayLabel = format(new Date(), "EEEE, MMMM d");
-
-  const sparklines = [
-    {
-      label: "Sleep Duration",
-      display: sleepHours !== null ? `${sleepHours} hrs` : "— hrs",
-      color: "#6366f1",
-      data: history.map((d) => ({ v: d.sleep_hours ?? 0 })),
-    },
-    {
-      label: "Study Time",
-      display: `${learningMinutes} min`,
-      color: "#22c55e",
-      data: history.map((d) => ({ v: d.learning_minutes ?? 0 })),
-    },
-  ];
 
   return (
-    <div className="space-y-4">
-      {/* Profile card */}
-      <Card className="overflow-hidden">
-        <div className="bg-[#1E3932] px-5 py-4 flex items-center gap-4">
-          <div className="relative shrink-0">
-            <div className="h-11 w-11 rounded-full bg-white/20 flex items-center justify-center font-bold text-white text-base select-none">
-              JD
-            </div>
-            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-[#00754A] border-2 border-[#1E3932]" />
-          </div>
-          <div>
-            <p className="font-semibold text-sm leading-none mb-1 text-white">My Dashboard</p>
-            <p className="text-xs text-white/70">{todayLabel}</p>
-          </div>
-        </div>
-      </Card>
-
-      {/* Footstep Trail + Macro Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <FootstepTrail steps={steps} goal={12000} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <MacroBar calories={caloriesConsumed} protein={totalProtein} carbs={totalCarbs} />
-          </CardContent>
-        </Card>
+    <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-min gap-[10px]">
+      {/* Steps — span 2 */}
+      <div className={`${CELL} col-span-2`}>
+        <FootstepTrail steps={steps} goal={12000} />
       </div>
 
-      {/* Balance Scale */}
-      <Card>
-        <CardContent className="p-4">
-          <BalanceScale consumed={caloriesConsumed} burned={caloriesBurned} />
-        </CardContent>
-      </Card>
-
-      {/* Sleep + Learning stat cards */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Sleep — span 1 */}
+      <div className={`${CELL} col-span-1`}>
         <SleepCard hours={sleepHours} goal={8} />
+      </div>
+
+      {/* Study — span 1 */}
+      <div className={`${CELL} col-span-1`}>
         <LearningCard minutes={learningMinutes} goal={120} />
       </div>
 
-      {/* Sleep + Study sparklines */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {sparklines.map(({ label, display, color, data }) => (
-          <Card key={label}>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">{label}</p>
-                <p className="text-sm font-bold">{display}</p>
-              </div>
-              <ResponsiveContainer width="100%" height={36}>
-                <BarChart data={data} margin={{ top: 0, right: 0, bottom: 0, left: 0 }} barCategoryGap="20%">
-                  <Bar dataKey="v" fill={color} radius={[2, 2, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        ))}
+      {/* Macros — span 2 */}
+      <div className={`${CELL} col-span-2`}>
+        <MacroBar calories={caloriesConsumed} protein={totalProtein} carbs={totalCarbs} />
       </div>
 
-      {/* Bottom strip */}
-      <Card>
-        <CardContent className="py-4">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-4 text-center">
-            <div className="px-3 sm:border-r border-border">
-              <p className="text-2xl font-bold">{workoutCount}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Workouts</p>
-            </div>
-            <div className="px-3 sm:border-r border-border">
-              <p className="text-2xl font-bold">{foodEntryCount}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Food Entries</p>
-            </div>
-            <div className="px-3 sm:border-r border-border">
-              <p className="text-2xl font-bold">{activeMinutes}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Active Min</p>
-            </div>
-            <div className="px-3">
-              <p className="text-2xl font-bold">
-                {supplementsTaken}
-                <span className="text-sm font-normal text-muted-foreground">/7</span>
-              </p>
-              <p className="text-xs text-muted-foreground mt-0.5">Supplements</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Calorie Balance — span 2 */}
+      <div className={`${CELL} col-span-2`}>
+        <BalanceScale consumed={caloriesConsumed} burned={caloriesBurned} />
+      </div>
+
+      {/* Workout Summary — span 2 cols, 2 rows */}
+      <div className={`${CELL} col-span-2 md:row-span-2`}>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+          Workout Summary
+        </p>
+        {workoutsData.length > 0 ? (
+          <ul className="space-y-2">
+            {workoutsData.map((w) => (
+              <li key={w.id} className="flex flex-wrap items-center gap-1.5 text-sm">
+                <span className="font-medium">{w.exercise}</span>
+                {w.sets != null && <Badge variant="outline">{w.sets} sets</Badge>}
+                {w.reps != null && <Badge variant="outline">{w.reps} reps</Badge>}
+                {w.weight_lbs != null && <Badge variant="secondary">{w.weight_lbs} lbs</Badge>}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-muted-foreground">No sets logged yet today.</p>
+        )}
+      </div>
+
+      {/* Supplements — span 2 */}
+      <div className={`${CELL} col-span-2`}>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+          Supplements
+        </p>
+        <div className="space-y-3">
+          <SupplementGroup
+            title="Morning"
+            Icon={Sun}
+            items={MORNING_SUPPLEMENTS}
+            checked={supplementsChecked}
+            onToggle={toggleSupplement}
+          />
+          <div className="border-t" />
+          <SupplementGroup
+            title="Night"
+            Icon={Moon}
+            items={NIGHT_SUPPLEMENTS}
+            checked={supplementsChecked}
+            onToggle={toggleSupplement}
+          />
+        </div>
+      </div>
     </div>
   );
 }
