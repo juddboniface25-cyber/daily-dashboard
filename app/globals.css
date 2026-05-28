@@ -62,3 +62,41 @@
     letter-spacing: -0.01em;
   }
 }
+
+/* ── Overview card header animations ───────────────────────────── */
+
+/* Sleep: stars fade in and out, staggered via inline animation-delay */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Sleep: soft indigo glow pulse on the moon when the goal is met */
+@keyframes moon-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px rgba(99, 102, 241, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 7px rgba(99, 102, 241, 0.9));
+  }
+}
+
+/* Learning: radial glow ring expands outward and fades */
+@keyframes brain-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}

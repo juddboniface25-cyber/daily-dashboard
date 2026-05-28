@@ -61,3 +61,7 @@ alter table food_log    disable row level security;
 alter table supplements disable row level security;
 alter table sleep       disable row level security;
 alter table learning    disable row level security;
+
+-- Add macro columns to food_log (safe to run on existing tables)
+alter table public.food_log add column if not exists protein_g integer default 0;
+alter table public.food_log add column if not exists carbs_g   integer default 0;

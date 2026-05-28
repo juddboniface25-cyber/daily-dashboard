@@ -112,6 +112,8 @@ export default function HealthSection({ date }: { date: string }) {
   const [meal, setMeal] = useState<Meal>("breakfast");
   const [description, setDescription] = useState("");
   const [calories, setCalories] = useState("");
+  const [protein, setProtein] = useState("");
+  const [carbs, setCarbs] = useState("");
   const [saving, setSaving] = useState(false);
 
   async function saveEntry() {
@@ -122,9 +124,13 @@ export default function HealthSection({ date }: { date: string }) {
       meal: meal ?? null,
       description,
       calories: calories ? parseInt(calories, 10) : null,
+      protein_g: protein ? parseInt(protein, 10) : null,
+      carbs_g: carbs ? parseInt(carbs, 10) : null,
     });
     setDescription("");
     setCalories("");
+    setProtein("");
+    setCarbs("");
     setSaving(false);
   }
 
@@ -134,6 +140,8 @@ export default function HealthSection({ date }: { date: string }) {
   );
 
   const totalCalories = entries.reduce((sum, e) => sum + (e.calories ?? 0), 0);
+  const totalProtein  = entries.reduce((sum, e) => sum + (e.protein_g ?? 0), 0);
+  const totalCarbs    = entries.reduce((sum, e) => sum + (e.carbs_g ?? 0), 0);
   const hasEntries = entries.length > 0;
 
   return (
@@ -173,16 +181,40 @@ export default function HealthSection({ date }: { date: string }) {
                 onKeyDown={(e) => e.key === "Enter" && saveEntry()}
               />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="food-cal">Calories</Label>
-              <Input
-                id="food-cal"
-                type="number"
-                min={0}
-                placeholder="e.g. 450"
-                value={calories}
-                onChange={(e) => setCalories(e.target.value)}
-              />
+            <div className="grid grid-cols-3 gap-2">
+              <div className="space-y-1">
+                <Label htmlFor="food-cal">Calories</Label>
+                <Input
+                  id="food-cal"
+                  type="number"
+                  min={0}
+                  placeholder="450"
+                  value={calories}
+                  onChange={(e) => setCalories(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="food-protein">Protein (g)</Label>
+                <Input
+                  id="food-protein"
+                  type="number"
+                  min={0}
+                  placeholder="40"
+                  value={protein}
+                  onChange={(e) => setProtein(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="food-carbs">Carbs (g)</Label>
+                <Input
+                  id="food-carbs"
+                  type="number"
+                  min={0}
+                  placeholder="50"
+                  value={carbs}
+                  onChange={(e) => setCarbs(e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
@@ -200,20 +232,36 @@ export default function HealthSection({ date }: { date: string }) {
                     </p>
                     <ul className="space-y-1">
                       {grouped[m].map((entry) => (
-                        <li key={entry.id} className="flex items-center justify-between text-sm">
-                          <span>{entry.description}</span>
-                          {entry.calories != null && (
-                            <Badge variant="secondary">{entry.calories} cal</Badge>
-                          )}
+                        <li key={entry.id} className="flex items-center justify-between gap-2 text-sm">
+                          <span className="flex-1 truncate">{entry.description}</span>
+                          <div className="flex items-center gap-1 shrink-0">
+                            {entry.protein_g != null && entry.protein_g > 0 && (
+                              <Badge variant="outline" className="text-[10px] px-1.5 text-blue-400 border-blue-800">{entry.protein_g}g P</Badge>
+                            )}
+                            {entry.carbs_g != null && entry.carbs_g > 0 && (
+                              <Badge variant="outline" className="text-[10px] px-1.5 text-green-400 border-green-800">{entry.carbs_g}g C</Badge>
+                            )}
+                            {entry.calories != null && (
+                              <Badge variant="secondary">{entry.calories} cal</Badge>
+                            )}
+                          </div>
                         </li>
                       ))}
                     </ul>
                   </div>
                 )
               )}
-              <div className="flex items-center justify-between border-t pt-3 font-semibold">
+              <div className="flex items-center justify-between border-t pt-3 font-semibold gap-2">
                 <span className="text-sm">Total</span>
-                <Badge>{totalCalories.toLocaleString()} cal</Badge>
+                <div className="flex items-center gap-1.5">
+                  {totalProtein > 0 && (
+                    <Badge variant="outline" className="text-blue-400 border-blue-800">{totalProtein}g P</Badge>
+                  )}
+                  {totalCarbs > 0 && (
+                    <Badge variant="outline" className="text-green-400 border-green-800">{totalCarbs}g C</Badge>
+                  )}
+                  <Badge>{totalCalories.toLocaleString()} cal</Badge>
+                </div>
               </div>
             </div>
           )}
